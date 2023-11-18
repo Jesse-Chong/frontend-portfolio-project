@@ -26,7 +26,7 @@ function Todos() {
             <tr>
               <th>Title</th>
               <th>Description</th>
-              <th>checkbox</th>
+              <th>Is it complete?</th>
             </tr>
           </thead>
           <tbody>
