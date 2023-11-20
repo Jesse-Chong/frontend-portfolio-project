@@ -32,7 +32,6 @@ function Todo({ todo }) {
         <Link to={`/todos/${id}`}>{capitalizeTitle(todo_title)}</Link>
       </td>
       <td>{capitalizeDescription(todo_description)}</td>
-      {/* <td>{todo_date}</td> */}
               <button onClick={handleToggleCompletion}>
         {completionStatus ? "✅" : "❌"}
         </button>
