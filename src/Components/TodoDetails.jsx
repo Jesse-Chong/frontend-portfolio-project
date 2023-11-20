@@ -33,21 +33,22 @@ function TodoDetails() {
       try {
         const response = await fetch(`${API}/todo/${id}`);
         const data = await response.json();
+        
+        // Date ensures that the data will be coverted to a date and if not show invalid date
         if (response.ok) {
-          const capitalizedTodo = {
-            ...data,
-            todo_title: capitalizeTitle(data.todo_title),
-            todo_description: capitalizeDescription(data.todo_description),
-          };
-          setTodo(capitalizedTodo);
+            const capitalizedTodo = {
+                ...data,
+                todo_date: new Date(data.todo_date).toISOString().split('T')[0],
+              };
+              setTodo(capitalizedTodo);
         } else {
-          console.error("Error in API response:", data);
+          console.error(`Error in API response (${response.status}):`, data);
         }
       } catch (error) {
         console.error("Error fetching todo:", error);
       }
     };
-
+  
     fetchTodo();
   }, [id]);
 
