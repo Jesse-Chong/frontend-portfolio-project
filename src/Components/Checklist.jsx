@@ -1,5 +1,6 @@
 import { useState } from "react";
 import ChecklistForm from "./ChecklistForm";
+import { capitalizeDescription } from "./helper";
 
 function Checklist({
   checklist,
@@ -25,7 +26,7 @@ function Checklist({
         <div>
           <h4>
             {checklist.checklist_title}{" "}
-            <span>{checklist.checklist_description}</span>
+            <span>{capitalizeDescription(checklist.checklist_description)}</span>
           </h4>
           <p>
             Completion Status:{" "}

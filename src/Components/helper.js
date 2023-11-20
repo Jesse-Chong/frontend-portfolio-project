@@ -22,5 +22,5 @@ export function capitalizeDescription(desc) {
     ? restOfDescription
     : `${restOfDescription}.`;
 
-  return `${firstWord} ${formattedDescription}`;
+  return `${firstWord}${formattedDescription}`;
 }
