@@ -1,9 +1,9 @@
-// import TodoEditForm from "../Components/TodoEditForm";
+import TodoEditForm from "../Components/TodoEditForm";
 
 function Edit() {
   return (
   <div className="Edit">
-    {/* <TodoEditForm /> */}
+    <TodoEditForm />
   </div>
   )
 }
