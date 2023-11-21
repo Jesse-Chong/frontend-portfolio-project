@@ -6,6 +6,7 @@ const API = import.meta.env.VITE_API_URL;
 console.log(API);
 function Todos() {
   const [todos, setTodos] = useState([]);
+  const [filter, setFilter] = useState("all");
 
   useEffect(() => {
     fetch(`${API}/todo`)
@@ -21,6 +22,11 @@ function Todos() {
   return (
     <div className="Todos">
       <section>
+        <div>
+          <button onClick={() => setFilter("all")}>All</button>
+          <button onClick={() => setFilter("work")}>Work</button>
+          <button onClick={() => setFilter("personal")}>Personal</button>
+        </div>
         <table>
           <thead>
             <tr>
@@ -31,7 +37,7 @@ function Todos() {
           </thead>
           <tbody>
             {todos.map((todo) => {
-              return <Todo key={todo.id} todo={todo} />
+              return <Todo key={todo.id} todo={todo} />;
             })}
           </tbody>
         </table>

@@ -5,9 +5,23 @@ import { capitalizeTitle, capitalizeDescription } from "./helper";
 const API = import.meta.env.VITE_API_URL;
 
 function Todo({ todo }) {
-  const { id, todo_title, todo_description, todo_date, todo_istrue } = todo;
+  const {
+    id,
+    todo_title,
+    todo_description,
+    todo_date,
+    todo_istrue,
+    todo_category,
+  } = todo;
   const [completionStatus, setCompletionStatus] = useState(todo_istrue);
-  console.log(id, todo_title, todo_description, todo_date, todo_istrue);
+  console.log(
+    id,
+    todo_title,
+    todo_description,
+    todo_date,
+    todo_istrue,
+    todo_category
+  );
 
   const handleToggleCompletion = async () => {
     try {
@@ -32,9 +46,9 @@ function Todo({ todo }) {
         <Link to={`/todos/${id}`}>{capitalizeTitle(todo_title)}</Link>
       </td>
       <td>{capitalizeDescription(todo_description)}</td>
-              <button onClick={handleToggleCompletion}>
+      <button onClick={handleToggleCompletion}>
         {completionStatus ? "✅" : "❌"}
-        </button>
+      </button>
     </tr>
   );
 }

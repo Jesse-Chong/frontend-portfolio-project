@@ -10,7 +10,8 @@ function TodoEditForm() {
     todo_title: "",
     todo_description: "",
     todo_date: "",
-    todo_istrue: false
+    todo_istrue: false,
+    todo_category: "",
   });
 
   const handleTextChange = (event) => {
@@ -26,7 +27,7 @@ function TodoEditForm() {
         "Content-Type": "application/json",
       },
     })
-    .then((response) => {
+      .then((response) => {
         if (!response.ok) {
           throw new Error(`Server returned status: ${response.status}`);
         }
@@ -57,56 +58,69 @@ function TodoEditForm() {
 
   return (
     <>
-              <form onSubmit={handleSubmit}>
-                <div className="title">
-                  <label htmlFor="todo_title" className="form-label">
-                    Title:
-                  </label>
-                  <input
-                    id="todo_title"
-                    value={todo.todo_title}
-                    type="text"
-                    className="form-control"
-                    onChange={handleTextChange}
-                    placeholder="Title"
-                    required
-                  />
-                </div>
-                <div className="description">
-                  <label htmlFor="todo_description" className="form-label">
-                    Description:
-                  </label>
-                  <input
-                    id="todo_description"
-                    type="text"
-                    value={todo.todo_description}
-                    className="form-control"
-                    placeholder="Description"
-                    onChange={handleTextChange}
-                    required
-                  />
-                </div>
-                <div className="date">
-                  <label htmlFor="todo_date" className="form-label">
-                    Date:
-                  </label>
-                  <input
-                    id="todo_date"
-                    type="date"
-                    value={todo.todo_date}
-                    className="form-control"
-                    placeholder="Date"
-                    onChange={handleTextChange}
-                    required
-                  />
-                </div>
-                <button type="submit" className="btn btn-success">
-                  Save
-                </button>
-              </form>
-              <Link to={`/todos/${id}`}>
-                <button className="btn btn-secondary mt-2">Cancel</button>
-              </Link>
+      <form onSubmit={handleSubmit}>
+        <div className="title">
+          <label htmlFor="todo_title" className="form-label">
+            Title:
+          </label>
+          <input
+            id="todo_title"
+            value={todo.todo_title}
+            type="text"
+            className="form-control"
+            onChange={handleTextChange}
+            placeholder="Title"
+            required
+          />
+        </div>
+        <div className="description">
+          <label htmlFor="todo_description" className="form-label">
+            Description:
+          </label>
+          <input
+            id="todo_description"
+            type="text"
+            value={todo.todo_description}
+            className="form-control"
+            placeholder="Description"
+            onChange={handleTextChange}
+            required
+          />
+        </div>
+        <div className="date">
+          <label htmlFor="todo_date" className="form-label">
+            Date:
+          </label>
+          <input
+            id="todo_date"
+            type="date"
+            value={todo.todo_date}
+            className="form-control"
+            placeholder="Date"
+            onChange={handleTextChange}
+            required
+          />
+        </div>
+        <div className="cetegory">
+          <label htmlFor="todo_category">Category:</label>
+          <select
+            id="todo_category"
+            value={todo.todo_category}
+            onChange={(e) =>
+              setTodo({ ...todo, todo_category: e.target.value })
+            }
+          >
+            <option value="personal">Personal</option>
+            <option value="work">Work</option>
+          </select>
+        </div>
+        <button type="submit" className="btn btn-success">
+          Save
+        </button>
+      </form>
+      <Link to={`/todos/${id}`}>
+        <button className="btn btn-secondary mt-2">Cancel</button>
+      </Link>
     </>
   );
 }
