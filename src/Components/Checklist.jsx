@@ -24,16 +24,13 @@ function Checklist({
         />
       ) : (
         <div>
-          <h4>
+          <p>
             {checklist.checklist_title}{" "}
             <span>{capitalizeDescription(checklist.checklist_description)}</span>
-          </h4>
-          <p>
-            Completion Status:{" "}
-            {checklist.checklist_istrue ? "Completed" : "Incomplete"}
           </p>
+
           <button onClick={() => handleUpdateStatus(checklist.id)}>
-            {checklist.checklist_istrue ? "Incomplete" : "Completed"}
+            Done:{checklist.checklist_istrue ? "👍" : "👎"}
           </button>
         </div>
       )}

@@ -6,6 +6,7 @@ const API = import.meta.env.VITE_API_URL;
 console.log(API);
 function Todos() {
   const [todos, setTodos] = useState([]);
+  const [filteredTodos, setFilteredTodos] = useState([]);
   const [filter, setFilter] = useState("all");
 
   useEffect(() => {
@@ -19,13 +20,29 @@ function Todos() {
       .catch((error) => console.error(error));
   }, []);
 
+  useEffect(() => {
+    if (filter === "all") {
+      setFilteredTodos(todos);
+    } else {
+      const filtered = todos.filter((todo) => todo.todo_category === filter);
+      setFilteredTodos(filtered);
+    }
+  }, [todos, filter]);
+
   return (
     <div className="Todos">
       <section>
         <div>
-          <button onClick={() => setFilter("all")}>All</button>
-          <button onClick={() => setFilter("work")}>Work</button>
-          <button onClick={() => setFilter("personal")}>Personal</button>
+          <label htmlFor="categoryFilter">Filter by Category: </label>
+          <select
+            id="categoryFilter"
+            onChange={(e) => setFilter(e.target.value)}
+            value={filter}
+          >
+            <option value="all">All</option>
+            <option value="work">Work</option>
+            <option value="personal">Personal</option>
+          </select>
         </div>
         <table>
           <thead>
@@ -36,9 +53,9 @@ function Todos() {
             </tr>
           </thead>
           <tbody>
-            {todos.map((todo) => {
-              return <Todo key={todo.id} todo={todo} />;
-            })}
+            {filteredTodos.map((todo) => (
+              <Todo key={todo.id} todo={todo} />
+            ))}
           </tbody>
         </table>
       </section>
