@@ -1,5 +1,5 @@
 # React + Vite
-💰 Full Stack Budgeting App 💰
+Oh Crap! Wheres my Priorities!
 
 # Instructions
 1. Clone the repo
@@ -9,6 +9,8 @@
 Back-end repo : https://github.com/Jesse-Chong/backend-portfolio-project
 Excalidraw is in the public folder.
 Trello link : https://trello.com/b/9bqV3tRA/simple-project-board
+Front-end deployement: https://ohcrap-wheres-my-priorities.netlify.app
+Back-end deployment: https://backend-portfolio-project.onrender.com/todo
 
 (1) NavBar
 * The NavBar allows me to navigate to the index, or new entry.
@@ -37,7 +39,7 @@ Trello link : https://trello.com/b/9bqV3tRA/simple-project-board
 * Display errors to users when they incorrectly fill out a form when attempting to create or update a resource.
 * Added one-to-many table relationship to my database.
 * Create middleware in back-end application to validate for particular values when a resource is created or updated.
-* Visually allow for interacting with a secont resource from the front-end (checklist)
+* Visually allow for interacting with a second resource from the front-end (checklist)
 * Used re-usable helper functions for human readability for description and title even if user didnt input proper grammar.
 * Fully functional toggle where if user says no on the delete modal for todo or checklist toggle it goes back to "incomplete (❌)"
 * Used useLocation to hide the navbar in the homepage to make the design more fluide (Not much point in a homepage except for introduction to the app for this project.)
