@@ -9,20 +9,27 @@ function Checklists({ checklists, setChecklists }) {
   const [loading, setLoading] = useState(true);
   const { id } = useParams();
 
-  const handleAdd = (newChecklist) => {
-    fetch(`${API}/todo/${id}/checklist`, {
-      method: "POST",
-      body: JSON.stringify(newChecklist),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((response) => response.json())
-      .then((responseJSON) => {
-        console.log("Fetched Checklists:", responseJSON);
+  const handleAdd = async (newChecklist) => {
+    try {
+      const checklistToAdd = { ...newChecklist, checklist_istrue: false };
+
+      const response = await fetch(`${API}/todo/${id}/checklist`, {
+        method: "POST",
+        body: JSON.stringify(checklistToAdd),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (response.ok) {
+        const responseJSON = await response.json();
         setChecklists((prevChecklists) => [responseJSON, ...prevChecklists]);
-      })
-      .catch((error) => console.error("Add Checklist Error:", error));
+      } else {
+        console.error("Error adding checklist:", response.status);
+      }
+    } catch (error) {
+      console.error("Add Checklist Error:", error);
+    }
   };
 
   const handleDelete = async (checklistId) => {
@@ -36,79 +43,51 @@ function Checklists({ checklists, setChecklists }) {
 
       if (response.ok) {
         const deletedChecklist = await response.json();
-
         if (deletedChecklist && deletedChecklist.id) {
-          console.log("Checklist deleted successfully");
-
           setChecklists((prevChecklists) =>
             prevChecklists.filter(
               (checklist) => checklist.id !== deletedChecklist.id
             )
           );
-        } else {
-          console.log("Checklist not found:", checklistId);
         }
       } else {
-        console.log("Error deleting checklist:", response.status);
+        console.error("Error deleting checklist:", response.status);
       }
     } catch (error) {
       console.error("Error deleting checklist:", error);
     }
   };
 
-  const handleEdit = (updatedChecklist) => {
-    // Check if the updatedChecklist object has an 'id' property
-    if (!updatedChecklist || !updatedChecklist.id) {
-      console.error("Error: Checklist id is missing.");
-      return;
-    }
+  const handleEdit = async (updatedChecklist) => {
+    try {
+      if (!updatedChecklist || !updatedChecklist.id) {
+        console.error("Error: Checklist id is missing.");
+        return;
+      }
 
-    fetch(`${API}/todo/${id}/checklist/${updatedChecklist.id}`, {
-      method: "PUT",
-      body: JSON.stringify(updatedChecklist),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
+      const response = await fetch(
+        `${API}/todo/${id}/checklist/${updatedChecklist.id}`,
+        {
+          method: "PUT",
+          body: JSON.stringify(updatedChecklist),
+          headers: {
+            "Content-Type": "application/json"
+          },
         }
-        return response.json();
-      })
-      .then((responseJSON) => {
-        console.log("Edited Checklist:", responseJSON);
+      );
+
+      if (response.ok) {
+        const responseJSON = await response.json();
         setChecklists((prevChecklists) =>
           prevChecklists.map((checklist) =>
             checklist.id === updatedChecklist.id ? responseJSON : checklist
           )
         );
-      })
-      .catch((error) => console.error("Edit Checklist Error:", error));
-  };
-
-  const handleUpdateStatus = async (checklistId) => {
-    try {
-      const response = await fetch(
-        `${API}/todo/${id}/checklist/${checklistId}/completion`,
-        {
-          method: "PUT",
-        }
-      );
-
-      if (response.ok) {
-        const updatedChecklist = await response.json();
-
-        setChecklists((prevChecklists) =>
-          prevChecklists.map((checklist) =>
-            checklist.id === updatedChecklist.id ? updatedChecklist : checklist
-          )
-        );
       } else {
-        console.error("Error updating completion status:", response.status);
+        console.error("Error editing checklist:", response.status);
       }
     } catch (error) {
-      console.error("Error updating completion status:", error);
+      console.error("Edit Checklist Error:", error);
     }
   };
 
@@ -117,7 +96,6 @@ function Checklists({ checklists, setChecklists }) {
       fetch(`${API}/todo/${id}/checklist`)
         .then((response) => response.json())
         .then((responseJSON) => {
-          console.log("Fetched Checklists:", responseJSON);
 
           if (
             responseJSON &&
@@ -152,9 +130,10 @@ function Checklists({ checklists, setChecklists }) {
           <Checklist
             key={checklist.id}
             checklist={checklist}
+            id={id}
             handleSubmit={handleEdit}
             handleDelete={handleDelete}
-            handleUpdateStatus={handleUpdateStatus}
+            setChecklists={setChecklists}
           />
         ))
       ) : (

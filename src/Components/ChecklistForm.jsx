@@ -1,10 +1,12 @@
 import { useState, useEffect } from "react";
+import { capitalizeDescription } from "./helper";
+import { Card } from "react-bootstrap";
 
 function ChecklistForm({
   checklistDetails,
   handleSubmit,
   toggleView,
-  children,
+  children
 }) {
   const [checklist, setChecklist] = useState({
     checklist_description: "",
@@ -15,25 +17,32 @@ function ChecklistForm({
     if (checklistDetails && checklistDetails.id) {
       setChecklist({
         checklist_description: checklistDetails.checklist_description,
-        checklist_istrue: checklistDetails.checklist_istrue,
+        checklist_istrue: checklistDetails.checklist_istrue
       });
     }
   }, [checklistDetails]);
 
-  const onSubmit = (event) => {
+  const onSubmit = async (event) => {
     event.preventDefault();
-    console.log("Submitting checklist:", checklist);
-    handleSubmit({
+
+    const updatedChecklist = {
       ...checklist,
       id: checklistDetails ? checklistDetails.id : null,
-    });
+      checklist_description: capitalizeDescription(
+        checklist.checklist_description
+      ),
+      checklist_istrue: false,
+    };
+
+    await handleSubmit(updatedChecklist);
+
     if (checklistDetails) {
       toggleView();
     }
 
     setChecklist({
       checklist_description: "",
-      checklist_istrue: false,
+      checklist_istrue: false
     });
   };
 
@@ -42,36 +51,54 @@ function ChecklistForm({
   };
 
   return (
-    <div className="ChecklistForm">
-      {children}
-      <form onSubmit={onSubmit}>
-        <label htmlFor="checklist_description">Description:</label>
-        <input
-          id="checklist_description"
-          type="text"
-          required
-          value={checklist.checklist_description}
-          onChange={handleTextChange}
-          placeholder="Checklist description"
-        />
-        <br />
-        <label htmlFor="checklist_istrue">Completed:</label>
-        <input
-          id="checklist_istrue"
-          type="checkbox"
-          checked={checklist.checklist_istrue}
-          onChange={() =>
-            setChecklist({
-              ...checklist,
-              checklist_istrue: !checklist.checklist_istrue,
-            })
-          }
-        />
-        <br />
-        <button className="btn btn-success" type="submit">
-          Submit
-        </button>
-      </form>
+    <div className="New">
+      <br />
+      <h1
+        className="text-center"
+        style={{
+          background: "black",
+          color: "white",
+          padding: "10px",
+          width: "100%",
+          maxWidth: "600px",
+          margin: "0 auto"
+        }}
+      >
+        New Checklist
+      </h1>
+      <div
+        className="d-flex justify-content-center align-items-center"
+        style={{ marginBottom: "10px" }}
+      >
+        <Card className="border-5" style={{ borderColor: "black" }}>
+          <Card.Body>
+            {children}
+            <form onSubmit={onSubmit}>
+              <label htmlFor="checklist_description">Description:</label>
+              <input
+                id="checklist_description"
+                type="text"
+                required
+                value={checklist.checklist_description}
+                onChange={handleTextChange}
+                placeholder="Checklist description"
+              />
+              <br />
+              <br />
+              <div className="form-buttons">
+                <button className="btn btn-success" type="submit">
+                  Submit
+                </button>
+                {checklistDetails && (
+                  <button className="btn btn-secondary" onClick={toggleView}>
+                    Back
+                  </button>
+                )}
+              </div>
+            </form>
+          </Card.Body>
+        </Card>
+      </div>
     </div>
   );
 }

@@ -10,24 +10,28 @@ export function capitalizeTitle(title) {
   }
 }
 
-// This function is for capitalizing only the first letter of the first word in the description
-export function capitalizeDescription(desc) {
-  if (!desc) {
-    return "";
+// This function is for capitalizing only the first letter of the first word in the description along with a period and no whitespace.
+export const capitalizeDescription = (desc) => {
+  if (typeof desc !== "string" || desc === undefined) {
+    console.error("Invalid description:", desc);
+    throw new Error("Invalid description: " + desc);
   }
+
   // Remove existing punctuation at the end
-  // This basically looks for one or more occurences of '.', ',', ';', '!', or '?' at the end of the string
-  // and use replace to replace it with an empty string to make it more human readable.
+  // This basically looks for one or more occurrences of '.', ',', ';', '!', or '?' at the end of the string
+  // and use replace to replace it with an empty string
   const sanitizedDesc = desc.replace(/[.,;!?]+$/, "");
 
   const words = sanitizedDesc.split(" ");
   const firstWord = words[0].charAt(0).toUpperCase() + words[0].slice(1);
   const restOfDescription = words.slice(1).join(" ").toLowerCase();
 
-  // Add a period at the end unless there's an exclamation mark
+  // Add a period at the end unless there's an exclamation mark or it's an empty string
   const formattedDescription = restOfDescription.endsWith("!")
     ? restOfDescription
-    : `${restOfDescription}.`;
+    : restOfDescription.length > 0
+    ? `${restOfDescription}.`
+    : "";
 
   return `${firstWord} ${formattedDescription}`;
-}
+};

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { Button, Modal } from "react-bootstrap";
+import { Button, Modal, Card } from "react-bootstrap";
 import { capitalizeDescription, capitalizeTitle } from "./helper";
 import Checklists from "./Checklists";
 
@@ -23,6 +23,7 @@ function TodoDetails() {
       if (!response.ok) {
         throw new Error(`Server returned status: ${response.status}`);
       }
+      setShowDeleteModal(false);
       alert("todo entry deleted successfully");
       navigate("/todos");
     } catch (error) {
@@ -33,10 +34,8 @@ function TodoDetails() {
   useEffect(() => {
     const fetchTodo = async () => {
       try {
-        console.log("Fetching todo with id:", id);
         const response = await fetch(`${API}/todo/${id}`);
         const data = await response.json();
-        console.log("Fetched data:", data);
 
         // Date ensures that the data will be coverted to a date and if not show invalid date
         if (response.ok) {
@@ -44,7 +43,7 @@ function TodoDetails() {
             ...data,
             todo_title: capitalizeTitle(data.todo_title),
             todo_description: capitalizeDescription(data.todo_description),
-            todo_date: new Date(data.todo_date).toISOString().split("T")[0],
+            todo_date: new Date(data.todo_date).toISOString().split("T")[0]
           };
           setTodo(capitalizedTodo);
         } else {
@@ -60,27 +59,46 @@ function TodoDetails() {
 
   return (
     <>
-      {todo && (
-        <>
-          <p>Title: {todo.todo_title}</p>
-          <p>Description: {todo.todo_description}</p>
-          <p>Date: {todo.todo_date}</p>
-          <div>
-            <Button variant="danger" onClick={handleShowDeleteModal}>
-              Delete
-            </Button>
-            <Button variant="warning" onClick={() => navigate("/todos")}>
-              Back
-            </Button>
-            <button
-              className="info"
-              onClick={() => navigate(`/todos/${id}/edit`)}
-            >
-              Edit
-            </button>
-          </div>
-        </>
-      )}
+      <h1
+        className="text-center"
+        style={{
+          background: "black",
+          color: "white",
+          padding: "10px",
+          width: "100%",
+          maxWidth: "600px",
+          margin: "0 auto"
+        }}
+      >
+        Full Details
+      </h1>
+      <div className="d-flex justify-content-center align-items-center h-100">
+        <Card className="border-5">
+          <Card.Body className="text-center p-3">
+            {todo && (
+              <>
+                <h3>Title: {todo.todo_title}</h3>
+                <h5>Description: {todo.todo_description}</h5>
+                <h6>Date: {todo.todo_date}</h6>
+                <div>
+                  <Button variant="danger" onClick={handleShowDeleteModal}>
+                    Delete
+                  </Button>
+                  <Button variant="warning" onClick={() => navigate("/todos")}>
+                    Back
+                  </Button>
+                  <Button
+                    variant="info"
+                    onClick={() => navigate(`/todos/${id}/edit`)}
+                  >
+                    Edit
+                  </Button>
+                </div>
+              </>
+            )}
+          </Card.Body>
+        </Card>
+      </div>
       <Modal show={showDeleteModal} onHide={handleCloseDeleteModal}>
         <Modal.Header closeButton>
           <Modal.Title>Delete Confirmation</Modal.Title>

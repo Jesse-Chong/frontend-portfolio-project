@@ -1,16 +1,18 @@
 import { useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { Card } from "react-bootstrap";
+import { capitalizeDescription } from "./helper";
 
 const API = import.meta.env.VITE_API_URL;
 
 function TodoNewForm() {
-  let { id } = useParams();
   const navigate = useNavigate();
   const [todo, setTodo] = useState({
     todo_title: "",
     todo_description: "",
     todo_date: "",
     todo_istrue: false,
+    todo_category: "personal"
   });
 
   const handleTextChange = (event) => {
@@ -18,21 +20,20 @@ function TodoNewForm() {
   };
 
   const createTodo = () => {
+    const capitalizedDescription = capitalizeDescription(todo.todo_description);
     fetch(`${API}/todo`, {
       method: "POST",
-      body: JSON.stringify(todo),
+      body: JSON.stringify({ ...todo, todo_description: capitalizedDescription }),
       headers: {
-        "Content-Type": "application/json",
+        "Content-Type": "application/json"
       },
     })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error(`Server returned status: ${response.status}`);
+      .then((response) => response.json())
+      .then((data) => {
+        if (!data.id) {
+          throw new Error("Invalid response from server");
         }
-        return response.json();
-      })
-      .then((newTodo) => {
-        navigate(`/todos/${newTodo.id}`);
+        navigate(`/todos/${data.id}`);
       })
       .catch((error) => console.error("Error creating todo:", error));
   };
@@ -44,6 +45,21 @@ function TodoNewForm() {
 
   return (
     <>
+          <h1
+        className="text-center"
+        style={{     background: "black",
+        color: "white",
+        padding: "10px",
+        width: "100%", 
+        maxWidth: "600px",
+        margin: "0 auto" }}
+      >
+        New
+      </h1>
+    <div className="d-flex justify-content-center align-items-center">
+      <div className="Edit">
+        <Card className="border-5">
+          <Card.Body>
       <form onSubmit={handleSubmit}>
         <div className="title">
           <label htmlFor="todo_title" className="form-label">
@@ -87,6 +103,7 @@ function TodoNewForm() {
             required
           />
         </div>
+        < br/>
         <div className="category">
           <label htmlFor="todo_category">Category:</label>
           <select
@@ -100,13 +117,18 @@ function TodoNewForm() {
             <option value="work">Work</option>
           </select>
         </div>
+        <br />
         <button type="submit" className="btn btn-success">
           Save
         </button>
       </form>
-      <Link to={`/todos/${id}`}>
+      <Link to={`/todos`}>
         <button className="btn btn-secondary mt-2">Cancel</button>
       </Link>
+      </Card.Body>
+        </Card>
+        </div>
+        </div>
     </>
   );
 }
